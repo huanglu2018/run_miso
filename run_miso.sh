@@ -1,12 +1,14 @@
 ## [MISO](https://miso.readthedocs.io/en/fastmiso/)
 
-isoform-centric or exon-centric analysis
-
-```bash
-
 source activate miso
 
 source ./config.txt
+
+caselist_string=`less $case_bam_list_file` ; caselist=(${caselist_string// / })
+ctrllist_string=`less $ctrl_bam_list_file` ; ctrllist=(${ctrllist_string// / })
+
+total_bam_list= (${caselist[@]} ${caselist[@]})
+
 
 index_db=$(dirname $GFF3_anno|xargs -i echo {}/`basename $GFF3_anno|awk -F'.gff3' '{print$1}"_index_db"'`)
 exon_utils_dir=$(dirname $GFF3_anno|xargs -i echo {}/`basename $GFF3_anno|awk -F'.gff3' '{print$1"_exon_utils"}'`)
@@ -45,10 +47,6 @@ each_bam_miso(){
   summarize_miso --summarize-samples $outdir/ $outdir/
 }
 
-caselist_string=`less $case_bam_list_file|` ; caselist=(${caselist_string// / })
-ctrllist_string=`less $ctrl_bam_list_file|` ; ctrllist=(${ctrllist_string// / })
-
-total_bam_list= (${caselist[@]} ${caselist[@]})
 
 for bamfile in $total_bam_list
 do 
@@ -57,12 +55,6 @@ do
   each_bam_miso $bam_file $exon_utils_file $insert_dist_dir $each_outdir $read_length
 
 done
-
-
-
-
-read.table()
-
 
 
 
@@ -88,6 +80,3 @@ do
 done
 
 compare_miso --compare-samples control/ knockdown/ comparisons/
-
-
-```
