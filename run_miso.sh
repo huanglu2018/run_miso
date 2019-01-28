@@ -2,7 +2,7 @@
 
 isoform-centric or exon-centric analysis
 
-```{bash}
+```bash
 
 source activate miso
 
