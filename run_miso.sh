@@ -25,7 +25,7 @@ each_bam_miso(){
   bam_file=$1
   exon_utils_file=$2
   insert_dist_dir=$3
-  outdir=$4
+  each_outdir=$4
   read_length=$5
 
   settingfile=`miso|tail -n 1|awk -F': ' '{print$2}'`
@@ -34,21 +34,20 @@ each_bam_miso(){
   mn=`head -n 1 $insert_dist_dir/$(basename $bam_file).insert_len| cut -f2 -d '='|cut -f1 -d ','|xargs  printf "%.*f" 0`
   sd=`head -n 1 $insert_dist_dir/$(basename $bam_file).insert_len| cut -f3 -d '='|cut -f1 -d ','|xargs  printf "%.*f" 0`
   miso --run $index_db  $bam_file \
-    --output-dir $outdir/ \
+    --output-dir $each_outdir/ \
     --read-len $readlength \
     --paired-end $mn $sd \
     --settings-filename $settingfile \
     -p 12 \
-  summarize_miso --summarize-samples $outdir/ $outdir/
+  summarize_miso --summarize-samples $each_outdir/ $each_outdir/
 }
 
 
 for bamfile in $total_bam_list
 do 
   exon_utils_file=$exon_utils_dir/`ls $exon_utils_dir`
-  mkdir $outdir/$(basename $bamfile|awk -F'.sort.bam' '{print$1}')
+  each_outdir=$outdir/$(basename $bamfile|awk -F'.sort.bam' '{print$1}')
   each_bam_miso $bam_file $exon_utils_file $insert_dist_dir $each_outdir $read_length
-
 done
 
 
