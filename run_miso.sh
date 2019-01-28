@@ -6,22 +6,17 @@ source ./config.txt
 
 caselist_string=`less $case_bam_list_file` ; caselist=(${caselist_string// / })
 ctrllist_string=`less $ctrl_bam_list_file` ; ctrllist=(${ctrllist_string// / })
-
 total_bam_list= (${caselist[@]} ${caselist[@]})
 
 
-index_db=$(dirname $GFF3_anno|xargs -i echo {}/`basename $GFF3_anno|awk -F'.gff3' '{print$1}"_index_db"'`)
-exon_utils_dir=$(dirname $GFF3_anno|xargs -i echo {}/`basename $GFF3_anno|awk -F'.gff3' '{print$1"_exon_utils"}'`)
-insert_dist_dir=$(dirname $GFF3_anno|xargs -i echo {}/`basename $GFF3_anno|awk -F'.gff3' '{print$1"_insert_dist"}'`)
+
+index_db=$output_dir/`basename $GFF3_anno|awk -F'.gff3' '{print$1}"_index_db"'`
+exon_utils_dir=$output_dir/`basename $GFF3_anno|awk -F'.gff3' '{print$1"_exon_utils"}'`
+insert_dist_dir=$output_dir/`basename $GFF3_anno|awk -F'.gff3' '{print$1"_insert_dist"}'`
 
 mkdir -p $index_db
 mkdir -p $insert_dist_dir
 mkdir -p $exon_utils_dir
-
-cd /public/home/huanglu/mouse_APA_AS/AS/MISO/input/annotation/isoform_centric
-wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M20/gencode.vM20.annotation.gff3.gz
-mv gencode.vM20.annotation.gff3.gz mm10_gencode.vM20.annotation.gff3.gz
-gunzip mm10_gencode.vM20.annotation.gff3.gz
 
 index_gff --index $GFF3_anno $index_db/ || echo index_gff failed !
 exon_utils --get-const-exons $GFF3_anno --min-exon-size 1000 --output-dir $exon_utils_dir/ || echo exon_utils failed !
