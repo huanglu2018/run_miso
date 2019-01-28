@@ -1,1 +1,5 @@
 
+GFF3_anno=
+input_dir=
+output_dir=
+readlength=
